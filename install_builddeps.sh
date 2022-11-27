@@ -5,6 +5,10 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 
+DEP_PATH=$PWD/../dependencies/
+
+mkdir -p $DEP_PATH
+
 SUDO=''
 [[ $EUID -ne 0 ]] && SUDO=sudo
 
@@ -135,9 +139,9 @@ install_build_pkg_deps() {
 }
 
 install_freediameter() {
-    $SUDO rm -rf /tmp/freediameter
-    git clone -q https://github.com/sdecugis/freeDiameter.git /tmp/freediameter
-    pushd /tmp/freediameter
+    $SUDO rm -rf $DEP_PATH/freediameter
+    git clone -q https://github.com/sdecugis/freeDiameter.git $DEP_PATH/freediameter
+    pushd $DEP_PATH/freediameter
     git checkout -q tags/1.5.0
     mkdir -p build && cd build
     cmake -DDISABLE_SCTP:BOOL=OFF .. && make -j && $SUDO make install
@@ -145,10 +149,10 @@ install_freediameter() {
 }
 
 install_grpc() {
-    $SUDO rm -rf /tmp/grpc
+    $SUDO rm -rf $DEP_PATH/grpc
     git clone -b v1.27.2 \
-    -q https://github.com/grpc/grpc /tmp/grpc
-    pushd /tmp/grpc && \
+    -q https://github.com/grpc/grpc $DEP_PATH/grpc
+    pushd $DEP_PATH/grpc && \
     git submodule update --init && \
         CXXFLAGS='-Wno-error' HAS_SYSTEM_PROTOBUF=false make && make install && ldconfig
     popd
@@ -170,16 +174,16 @@ install_openssl() {
 
 install_prometheus() {
     set -xe 
-    pushd /tmp
+    pushd $DEP_PATH
     wget https://github.com/Kitware/CMake/releases/download/v3.18.0/cmake-3.18.0-Linux-x86_64.tar.gz
     tar -zxvf cmake-3.18.0-Linux-x86_64.tar.gz
-    $SUDO rm -rf /tmp/prometheus
-    git clone -q https://github.com/jupp0r/prometheus-cpp.git /tmp/prometheus
-    pushd /tmp/prometheus
+    $SUDO rm -rf $DEP_PATH/prometheus
+    git clone -q https://github.com/jupp0r/prometheus-cpp.git $DEP_PATH/prometheus
+    pushd $DEP_PATH/prometheus
     git submodule init
     git submodule update
     mkdir -p _build && cd _build
-    /tmp/cmake-3.18.0-Linux-x86_64/bin/cmake .. -DBUILD_SHARED_LIBS=ON && make -j 4 && $SUDO make install && $SUDO make DESTDIR=`pwd`/deploy install
+    $DEP_PATH/cmake-3.18.0-Linux-x86_64/bin/cmake .. -DBUILD_SHARED_LIBS=ON && make -j 4 && $SUDO make install && $SUDO make DESTDIR=`pwd`/deploy install
     popd
     popd
 }
@@ -192,15 +196,15 @@ install_pistache() {
     fi
     
     cat $PATCH_ROOT/patches/pistache.patch.1.txt
-    pushd /tmp
+    pushd $DEP_PATH
     echo "Installing pistache"
-    $SUDO rm -rf /tmp/pistache
+    $SUDO rm -rf $DEP_PATH/pistache
     git clone https://github.com/pistacheio/pistache.git
     pushd pistache
     git checkout 270bbefeb25a402153a55053f845e9c7674ab713
     patch -p1 < $PATCH_ROOT/patches/pistache.patch.1.txt
     mkdir build && cd build
-    /tmp/cmake-3.18.0-Linux-x86_64/bin/cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release ../
+    $DEP_PATH/cmake-3.18.0-Linux-x86_64/bin/cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release ../
     make 
     $SUDO make install
     popd

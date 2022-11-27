@@ -10,6 +10,7 @@ BUILDDIR = $(TOPDIR)/build
 BINDIR = $(BUILDDIR)/bins
 OBJDIR = $(BUILDDIR)/objs
 LIBDIR = $(BUILDDIR)/libs
+DEPDIR = $(PWD)/../dependencies/
 
 TARGET_DIR = $(TOPDIR)/target
 INCLUDE_DIR = $(TOPDIR)/include
@@ -35,8 +36,9 @@ CC := gcc
 
 DEBUG = true
 
-GRPC_ROOT=/tmp/grpc
+GRPC_ROOT=$(DEPDIR)/grpc
+PISTACHE_ROOT=$(DEPDIR)/pistache
 
 CFLAGS += -D_FORTIFY_SOURCE=2 -fasynchronous-unwind-tables -fexceptions
 CFLAGS += -fstack-protector-all -fstack-protector-strong -Wall
-CFLAGS += -Werror=format-security -Werror=implicit-function-declaration
+CFLAGS += -Werror=format-security

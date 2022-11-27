@@ -12,8 +12,8 @@
 include ../../Makefile.common
 
 CC := g++
-CFLAGS += -Wall -DSTATS -I/usr/include/openssl -I$(GRPC_ROOT)/include -I$(GRPC_ROOT)/third_party/protobuf/src -std=c++14
-LFLAGS += -L$(GRPC_ROOT)/libs/opt -L$(GRPC_ROOT)/libs/opt/protobuf
+CFLAGS += -Wall -DSTATS -I/usr/include/openssl -I$(GRPC_ROOT)/include -I$(GRPC_ROOT)/third_party/protobuf/src -I$(PISTACHE_ROOT)/include -std=c++14
+LFLAGS += -L$(GRPC_ROOT)/libs/opt -L$(GRPC_ROOT)/libs/opt/protobuf -L$(PISTACHE_ROOT)/build/src
 
 ifeq ($(DEBUG),true)
         CFLAGS += -g

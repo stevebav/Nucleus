@@ -14,7 +14,9 @@ LIB_PATH +=-L../common/ \
 	-L./asn1c/asnGenFiles \
 	-L./s1apContextManager \
 	-L../cmn \
-	-L../stateMachineFwk
+	-L../stateMachineFwk \
+	-L$(PISTACHE_ROOT)/build/src \
+	-L/usr/lib64
 
 SRCDIR := .
 TARGET := $(BINDIR)/s1ap-app
@@ -35,7 +37,7 @@ ifeq ($(DEBUG),false)
 	CFLAGS += -O3
 endif
 
-INCS := $(INC_DIRS) -I/usr/local/ssl/include
+INCS := $(INC_DIRS) -I/usr/local/ssl/include -I$(PISTACHE_ROOT)/include
 
 LIBS := -lpthread \
 	-lsctp \
@@ -49,9 +51,12 @@ LIBS := -lpthread \
 	-lasncodec \
 	-ljson \
 	-lmonitor_config \
-	-lsecutil
+	-lsecutil \
+	-lpistache \
+	-lm \
+	-lstdc++
 
-LIBS += -L/usr/local/ssl/lib -lcrypto
+LIBS += -L/usr/local/ssl/lib -lcrypto 
 $(TARGET): $(OBJECTS)
 	@echo " Linking..."
 	-@mkdir -p $(BINDIR)

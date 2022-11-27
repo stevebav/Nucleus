@@ -80,8 +80,9 @@ install:all
 	-@cp $(UNIXSOCK_LIBNAME) $(TARGET_DIR)/lib
 
 clean:
-	rm -f $(OBJDIR)/common
-	rm -f $(IF_LIBNAME) \
+	@echo "Cleaning...";
+	-rm -rf $(OBJDIR)/common
+	-rm -f $(IF_LIBNAME) \
 	      $(JSON_PARSER_LIBNAME) \
 	      $(UTIL_LIBNAME) \
 	      $(LOG_LIBNAME) \
